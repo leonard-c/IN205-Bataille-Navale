@@ -6,11 +6,81 @@ import ensta.util.Orientation;
 public class Board implements IBoard {
 
 	private static final int DEFAULT_SIZE = 10;
+
+	private String name;
+	private int size;
+	private char[][] ships;
+	private boolean[][] strikes;
 	
-	public Board() {
+	public Board(String name, int size) {
+		this.name = name;
+		this.size = size;
+		this.ships = new char[size][size];
+		this.strikes = new boolean[size][size];
+	}
+	public Board(String name){
+		this.name = name;
+		this.size = DEFAULT_SIZE;
+		this.ships = new char[DEFAULT_SIZE][DEFAULT_SIZE];
+		this.strikes = new boolean[DEFAULT_SIZE][DEFAULT_SIZE];
 	}
 
 	public void print() {
+		// Print labels
+		String Spaces = "";
+		for (int i=0; i<2*size-8+3+4; i++) Spaces += " ";
+		System.out.println("Navires:"+Spaces+"Frappes:");
+		String xLabel = "";
+		String [] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+									"S", "T", "U", "V", "W", "X", "Y", "Z"};
+		for (int i=0; i<size; i++) xLabel+=alphabet[i]+" ";
+		System.out.println("   "+xLabel+"    "+"   "+xLabel);
+		//Print grid
+		for (int i=0; i<size; i++)
+		{
+			String line=Integer.toString(i+1)+" ";
+			if (i<9) line+=" ";
+			for (int j=0; j<size; j++)
+				if (ships[i][j]=='\u0000')
+					line += ". ";
+			line += "    ";
+			line += Integer.toString(i+1)+" ";
+			if (i<9) line+=" ";
+			for (int j=0; j<size; j++)
+				if (strikes[i][j]==false)
+					line += ". ";
+			System.out.println(line);
+		}
+	}
+
+	@Override
+	public int getSize() {
+		return size;
+	}
+
+	@Override
+	public boolean putShip(AbstractShip ship, Coords coords) {
+		return false;
+	}
+
+	@Override
+	public boolean hasShip(Coords coords) {
+		return false;
+	}
+
+	@Override
+	public void setHit(boolean hit, Coords coords) {
+
+	}
+
+	@Override
+	public Boolean getHit(Coords coords) {
+		return null;
+	}
+
+	@Override
+	public Hit sendHit(Coords res) {
+		return null;
 	}
 
 	public boolean canPutShip(AbstractShip ship, Coords coords) {
