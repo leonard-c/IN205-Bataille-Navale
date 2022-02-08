@@ -4,9 +4,30 @@ import ensta.util.Orientation;
 
 public class AbstractShip {
 
-    private Orientation orientation;
-    private  int length;
+    private String label;
     private String name;
+    private int length;
+    private Orientation orientation;
+
+    public AbstractShip(String label, String name, int length, Orientation orientation) {
+        this.label = label;
+        this.name = name;
+        this.length = length;
+        this.orientation = orientation;
+    }
+
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getLength() {
+        return length;
+    }
 
     public Orientation getOrientation() {
         return orientation;
@@ -16,23 +37,9 @@ public class AbstractShip {
         this.orientation = orientation;
     }
 
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public boolean isSunk() {
         return false;
     }
+
+
 }
