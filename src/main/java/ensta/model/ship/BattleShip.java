@@ -4,9 +4,9 @@ import ensta.util.Orientation;
 
 public class BattleShip extends AbstractShip {
     public BattleShip() {
-        super("B", "BattleShip", 4, Orientation.EAST);
+        super('B', "BattleShip", 4, Orientation.EAST);
     }
     public BattleShip(Orientation orientation) {
-        super("B", "BattleShip", 4, orientation);
+        super('B', "BattleShip", 4, orientation);
     }
 }

@@ -60,6 +60,16 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean putShip(AbstractShip ship, Coords coords) {
+		if (coords.isInBoard(size)) {
+			if (ship.isInBoard(coords, size)) {
+				for (int i=0; i<ship.getLength(); i++){
+					if (ship.getOrientation()==Orientation.EAST) {
+						ships[coords.getY()][coords.getX()+i]=ship.getLabel();
+					}
+				}
+				return true;
+			}
+		}
 		return false;
 	}
 

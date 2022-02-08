@@ -44,6 +44,6 @@ public class Coords {
     }
 
     public boolean isInBoard(int size) {
-        return ((x<size)&&(y<size));
+        return ((x>=0)&&(x<size)&&(y>=0)&&(y<size));
     }
 }
