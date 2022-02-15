@@ -3,18 +3,20 @@ package ensta.model.ship;
 import ensta.model.Coords;
 import ensta.util.Orientation;
 
-public class AbstractShip {
+public abstract class AbstractShip {
 
     private char label;
     private String name;
     private int length;
     private Orientation orientation;
+    private int strikeCount;
 
     public AbstractShip(char label, String name, int length, Orientation orientation) {
         this.label = label;
         this.name = name;
         this.length = length;
         this.orientation = orientation;
+        this.strikeCount = 0;
     }
 
 
@@ -46,8 +48,14 @@ public class AbstractShip {
                         ((orientation==Orientation.NORTH)&&(coords.getY()-length>=0))
         );
     }
+
+    public void addStrike() {
+        if (strikeCount<this.length) {
+            strikeCount++;
+        }
+    }
     public boolean isSunk() {
-        return false;
+        return strikeCount==this.length;
     }
 
 

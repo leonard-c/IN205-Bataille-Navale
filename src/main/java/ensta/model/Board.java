@@ -1,6 +1,8 @@
 package ensta.model;
 
 import ensta.model.ship.AbstractShip;
+import ensta.model.ship.ShipState;
+import ensta.util.ColorUtil;
 import ensta.util.Orientation;
 
 public class Board implements IBoard {
@@ -9,49 +11,54 @@ public class Board implements IBoard {
 
 	private String name;
 	private int size;
-	private char[][] ships;
-	private boolean[][] strikes;
+	private ShipState[][] ships;
+	private Boolean[][] strikes;
 	
 	public Board(String name, int size) {
 		this.name = name;
 		this.size = size;
-		this.ships = new char[size][size];
-		this.strikes = new boolean[size][size];
+		this.ships = new ShipState[size][size];
+		this.strikes = new Boolean[size][size];
 	}
 	public Board(String name){
 		this.name = name;
 		this.size = DEFAULT_SIZE;
-		this.ships = new char[DEFAULT_SIZE][DEFAULT_SIZE];
-		this.strikes = new boolean[DEFAULT_SIZE][DEFAULT_SIZE];
+		this.ships = new ShipState[DEFAULT_SIZE][DEFAULT_SIZE];
+		this.strikes = new Boolean[DEFAULT_SIZE][DEFAULT_SIZE];
 	}
 
 	public void print() {
 		// Print labels
-		String Spaces = "";
-		for (int i=0; i<2*size-8+3+4; i++) Spaces += " ";
+		StringBuilder Spaces = new StringBuilder();
+		for (int i=0; i<2*size-8+3+4; i++) Spaces.append(" ");
 		System.out.println("Navires:"+Spaces+"Frappes:");
-		String xLabel = "";
+		StringBuilder xLabel = new StringBuilder();
 		String [] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
 									"S", "T", "U", "V", "W", "X", "Y", "Z"};
-		for (int i=0; i<size; i++) xLabel+=alphabet[i]+" ";
+		for (int i=0; i<size; i++) xLabel.append(alphabet[i]).append(" ");
 		System.out.println("   "+xLabel+"    "+"   "+xLabel);
 		//Print grid
 		for (int i=0; i<size; i++)
 		{
-			String line=Integer.toString(i+1)+" ";
-			if (i<9) line+=" ";
+			StringBuilder line= new StringBuilder(Integer.toString(i + 1) + " ");
+			if (i<9) line.append(" ");
 			for (int j=0; j<size; j++) {
-				if (ships[i][j] == '\u0000')
-					line += ". ";
+				if (ships[i][j] == null)
+					line.append(". ");
 				else
-					line += ships[i][j]+" ";
+					line.append(ships[i][j].toString()).append(" ");
 			}
-			line += "    ";
-			line += Integer.toString(i+1)+" ";
-			if (i<9) line+=" ";
-			for (int j=0; j<size; j++)
-				if (strikes[i][j]==false)
-					line += ". ";
+			line.append("    ");
+			line.append(Integer.toString(i + 1)).append(" ");
+			if (i<9) line.append(" ");
+			for (int j=0; j<size; j++) {
+				if (strikes[i][j] == null)
+					line.append(". ");
+				else if (strikes[i][j])
+					line.append(ColorUtil.colorize("X ", ColorUtil.Color.RED));
+				else
+					line.append("X ");
+			}
 			System.out.println(line);
 		}
 	}
@@ -67,22 +74,22 @@ public class Board implements IBoard {
 			if (canPutShip(ship, coords)) {
 				if (ship.getOrientation()==Orientation.EAST) {
 					for (int i=0; i<ship.getLength(); i++) {
-						ships[coords.getY()][coords.getX() + i] = ship.getLabel();
+						ships[coords.getY()][coords.getX() + i] = new ShipState(ship);
 					}
 				}
 				else if (ship.getOrientation()==Orientation.WEST) {
 					for (int i=0; i<ship.getLength(); i++) {
-						ships[coords.getY()][coords.getX() - i] = ship.getLabel();
+						ships[coords.getY()][coords.getX() - i] = new ShipState(ship);
 					}
 				}
 				else if (ship.getOrientation()==Orientation.SOUTH) {
 					for (int i=0; i<ship.getLength(); i++) {
-						ships[coords.getY() + i][coords.getX()] = ship.getLabel();
+						ships[coords.getY() + i][coords.getX()] = new ShipState(ship);
 					}
 				}
 				else if (ship.getOrientation()==Orientation.NORTH) {
 					for (int i=0; i<ship.getLength(); i++) {
-						ships[coords.getY() - i][coords.getX()] = ship.getLabel();
+						ships[coords.getY() - i][coords.getX()] = new ShipState(ship);
 					}
 				}
 				return true;
@@ -93,7 +100,7 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean hasShip(Coords coords) {
-		return ships[coords.getY()][coords.getX()]!='\u0000';
+		return ships[coords.getY()][coords.getX()]!=null;
 	}
 
 	@Override
