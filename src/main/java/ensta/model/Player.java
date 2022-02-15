@@ -43,11 +43,21 @@ public class Player {
 			String msg = String.format("placer %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
 			InputHelper.ShipInput res = InputHelper.readShipInput();
-			// TODO set ship orientation
-			// TODO put ship at given position
-			// TODO when ship placement successful
-			++i;
-			done = i == 5;
+			switch (res.orientation) {
+				case "north":
+					ships[i].setOrientation(Orientation.NORTH);
+				case "south":
+					ships[i].setOrientation(Orientation.SOUTH);
+				case "east":
+					ships[i].setOrientation(Orientation.EAST);
+				case "west":
+					ships[i].setOrientation(Orientation.WEST);
+			}
+			boolean shipIsPlaced = board.putShip(ships[i], new Coords(res.x, res.y));
+			if (shipIsPlaced) {
+				++i;
+				done = i == 5;
+			}
 
 			board.print();
 		} while (!done);
