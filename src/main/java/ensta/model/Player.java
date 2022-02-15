@@ -7,6 +7,8 @@ import ensta.model.ship.AbstractShip;
 import ensta.util.Orientation;
 import ensta.view.InputHelper;
 
+import ensta.exceptions.WrongEntryException;
+
 public class Player {
 	/*
 	 * ** Attributs
@@ -43,20 +45,35 @@ public class Player {
 			String msg = String.format("placer %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
 			InputHelper.ShipInput res = InputHelper.readShipInput();
-			switch (res.orientation) {
-				case "north":
-					ships[i].setOrientation(Orientation.NORTH);
-				case "south":
-					ships[i].setOrientation(Orientation.SOUTH);
-				case "east":
-					ships[i].setOrientation(Orientation.EAST);
-				case "west":
-					ships[i].setOrientation(Orientation.WEST);
+			try {
+				switch (res.orientation) {
+					case "north":
+						ships[i].setOrientation(Orientation.NORTH);
+						break;
+					case "south":
+						ships[i].setOrientation(Orientation.SOUTH);
+						break;
+					case "east":
+						ships[i].setOrientation(Orientation.EAST);
+						break;
+					case "west":
+						ships[i].setOrientation(Orientation.WEST);
+						break;
+					default:
+						throw new WrongEntryException("Orientation is not valid.");
+				}
+				Coords inputCoords = new Coords(res.x, res.y);
+				if (!inputCoords.isInBoard(board.getSize())) {
+					throw new WrongEntryException("Coordinates are out of bounds.");
+				}
+				boolean shipIsPlaced = board.putShip(ships[i], inputCoords);
+				if (shipIsPlaced) {
+					++i;
+					done = i == 5;
+				}
 			}
-			boolean shipIsPlaced = board.putShip(ships[i], new Coords(res.x, res.y));
-			if (shipIsPlaced) {
-				++i;
-				done = i == 5;
+			catch (WrongEntryException exception) {
+				exception.printStackTrace();
 			}
 
 			board.print();

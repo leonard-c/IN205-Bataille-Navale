@@ -68,8 +68,6 @@ public class Board implements IBoard {
 				if (ship.getOrientation()==Orientation.EAST) {
 					for (int i=0; i<ship.getLength(); i++) {
 						ships[coords.getY()][coords.getX() + i] = ship.getLabel();
-						//System.out.println(ship.getLabel());
-						System.out.println(ships[coords.getY()][coords.getX() + i]);
 					}
 				}
 				else if (ship.getOrientation()==Orientation.WEST) {
@@ -95,7 +93,6 @@ public class Board implements IBoard {
 
 	@Override
 	public boolean hasShip(Coords coords) {
-		System.out.println(ships[coords.getX()][coords.getY()]);
 		return ships[coords.getY()][coords.getX()]!='\u0000';
 	}
 
@@ -123,12 +120,9 @@ public class Board implements IBoard {
 			}
 			dx = 1;
 		} else if (o == Orientation.SOUTH) {
-			System.out.println("South");
 			if (coords.getY() + ship.getLength() > this.size) {
-				System.out.println("Ici c'est false");
 				return false;
 			}
-			System.out.println("Ici c'est true");
 			dy = 1;
 		} else if (o == Orientation.NORTH) {
 			if (coords.getY() + 1 - ship.getLength() < 0) {
@@ -145,9 +139,7 @@ public class Board implements IBoard {
 		Coords iCoords = new Coords(coords);
 
 		for (int i = 0; i < ship.getLength(); ++i) {
-			System.out.println(iCoords.getX()+","+iCoords.getY());
 			if (this.hasShip(iCoords)) {
-				System.out.println("Problème à "+iCoords.getX()+","+iCoords.getY());
 				return false;
 			}
 			iCoords.setX(iCoords.getX() + dx);
