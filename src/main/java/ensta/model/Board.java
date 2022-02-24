@@ -1,5 +1,6 @@
 package ensta.model;
 
+import ensta.exceptions.WrongEntryException;
 import ensta.model.ship.AbstractShip;
 import ensta.model.ship.ShipState;
 import ensta.util.ColorUtil;
@@ -105,17 +106,43 @@ public class Board implements IBoard {
 
 	@Override
 	public void setHit(boolean hit, Coords coords) {
-
+		strikes[coords.getY()][coords.getX()]=hit;
 	}
 
 	@Override
 	public Boolean getHit(Coords coords) {
-		return null;
+		return strikes[coords.getY()][coords.getX()];
 	}
 
 	@Override
 	public Hit sendHit(Coords res) {
-		return null;
+		if (ships[res.getY()][res.getX()] == null) {
+			setHit(false, res);
+			return Hit.MISS;
+		}
+		if (!ships[res.getY()][res.getX()].isStruck()) {
+			setHit(true, res);
+			if (ships[res.getY()][res.getX()].isSunk()) {
+				switch (ships[res.getY()][res.getX()].getShip().getLabel()) {
+					case 'C':
+						return Hit.CARRIER;
+					case 'D':
+						return Hit.DESTROYER;
+					case 'S':
+						return Hit.SUBMARINE;
+					case 'B':
+						return Hit.BATTLESHIP;
+				}
+			}
+		} else {
+			return null;
+		}
+		return Hit.STRIKE;
+	}
+
+	@Override
+	public Hit sendHit(int x, int y) {
+		return sendHit(new Coords(x,y));
 	}
 
 	public boolean canPutShip(AbstractShip ship, Coords coords) {

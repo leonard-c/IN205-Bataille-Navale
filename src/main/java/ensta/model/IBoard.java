@@ -41,5 +41,7 @@ public interface IBoard {
 
 	public Hit sendHit(Coords res);
 
+    public Hit sendHit(int x, int y);
+
 	public boolean canPutShip(AbstractShip ship, Coords coords);
 }

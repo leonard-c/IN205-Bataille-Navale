@@ -3,6 +3,7 @@ package ensta;
 import ensta.controller.Game;
 import ensta.model.Board;
 import ensta.model.Coords;
+import ensta.model.Hit;
 import ensta.model.ship.BattleShip;
 import ensta.model.ship.Submarine;
 import ensta.model.ship.Carrier;
@@ -19,6 +20,17 @@ public class Main {
         b.putShip(new Carrier(), new Coords(2,4));
         b.putShip(new Submarine(Orientation.EAST), new Coords(7,2));
         b.print();
+
+        b.sendHit(4,5);
+        b.sendHit(3,1);
+        b.sendHit(1,1);
+
+        b.sendHit(4,4);
+        Hit hit = b.sendHit(4, 6);
+
+        b.print();
+
+        System.out.println(hit.toString());
     }
 
 }
