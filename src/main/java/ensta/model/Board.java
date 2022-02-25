@@ -117,11 +117,10 @@ public class Board implements IBoard {
 	@Override
 	public Hit sendHit(Coords res) {
 		if (ships[res.getY()][res.getX()] == null) {
-			setHit(false, res);
 			return Hit.MISS;
 		}
 		if (!ships[res.getY()][res.getX()].isStruck()) {
-			setHit(true, res);
+			ships[res.getY()][res.getX()].addStrike();
 			if (ships[res.getY()][res.getX()].isSunk()) {
 				switch (ships[res.getY()][res.getX()].getShip().getLabel()) {
 					case 'C':
