@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import ensta.ai.PlayerAI;
+import ensta.exceptions.WrongEntryException;
 import ensta.model.Board;
 import ensta.model.Coords;
 import ensta.model.Hit;
@@ -32,6 +33,7 @@ public class Game {
 	private Player player1;
 	private Player player2;
 	private Scanner sin;
+	private boolean multiplayer;
 
 	/*
 	 * *** Constructeurs
@@ -41,6 +43,24 @@ public class Game {
 
 	public Game init() {
 		if (!loadSave()) {
+
+			sin = new Scanner(System.in);
+
+			boolean done = false;
+			do {
+				try {
+					System.out.println("Multiplayer mode? (y/n)");
+					String ans = sin.nextLine().toLowerCase();
+					if ((!ans.equals("y"))&&(!ans.equals("n"))) {
+						throw new WrongEntryException("Please answer by 'y' or 'n'");
+					}
+					multiplayer = ans.equals("y");
+					done = true;
+				}
+				catch (WrongEntryException e) {
+					System.err.println(e.getMessage());
+				}
+			} while (!done);
 
 			Board player1Board = new Board("Player 1");
 			Board player2Board  = new Board("Player 2");
@@ -58,10 +78,14 @@ public class Game {
 			player2Ships.add(new Destroyer());
 			player2Ships.add(new BattleShip());
 			this.player1 = new Player(player1Board, player2Board, player1Ships);
-			this.player2 = new PlayerAI(player2Board, player1Board, player2Ships);
+			if (multiplayer)
+				this.player2 = new Player(player2Board, player1Board, player2Ships);
+			else
+				this.player2 = new PlayerAI(player2Board, player1Board, player2Ships);
 
 			this.player1.putShips();
 			this.player2.putShips();
+
 		}
 		return this;
 	}
@@ -72,6 +96,7 @@ public class Game {
 	public void run() {
 		Coords coords = new Coords();
 		Board b1 = player1.getBoard();
+		Board b2 = player2.getBoard();
 		Hit hit;
 
 		// main loop
@@ -95,9 +120,15 @@ public class Game {
 					hit = player2.sendHit(coords);
 
 					strike = hit != Hit.MISS;
-					if (strike) {
+					if (strike && (!multiplayer)) {
 						b1.print();
 					}
+
+					if (multiplayer) {
+						b2.setHit(strike, coords);
+						b2.print();
+					}
+
 					System.out.println(makeHitMessage(true /* incoming hit */, coords, hit));
 					done = updateScore();
 
@@ -111,7 +142,7 @@ public class Game {
 
 		SAVE_FILE.delete();
 		System.out.println(String.format("joueur %d gagne", player1.isLose() ? 2 : 1));
-		//sin.close();
+		sin.close();
 	}
 
 	private void save() {
