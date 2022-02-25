@@ -42,6 +42,7 @@ public class Player {
 
 		do {
 			AbstractShip ship = ships[i];
+			board.print();
 			String msg = String.format("placer %d : %s(%d)", i + 1, ship.getName(), ship.getLength());
 			System.out.println(msg);
 			InputHelper.ShipInput res = InputHelper.readShipInput();
@@ -71,31 +72,42 @@ public class Player {
 					++i;
 					done = i == 5;
 				}
+				else {
+					throw new WrongEntryException("Ship can't be placed here.");
+				}
 			}
 			catch (WrongEntryException exception) {
-				exception.printStackTrace();
+				System.err.println(exception.getMessage());
 			}
-
-			board.print();
 		} while (!done);
 	}
 
 	public Hit sendHit(Coords coords) {
-		boolean done = false;
-		Hit hit = null;
+		try {
+			boolean done = false;
+			Hit hit = null;
 
-		do {
-			System.out.println("Où frapper?");
-			InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
-			hit = this.opponentBoard.sendHit(new Coords(hitInput.x, hitInput.y));
-			if (hit!=null)
-				done = true;
+			do {
+				System.out.println("Où frapper?");
+				InputHelper.CoordInput hitInput = InputHelper.readCoordInput();
+				if ((hitInput.x < 0) || (hitInput.x >= opponentBoard.getSize()) ||
+						(hitInput.y < 0) || (hitInput.y >= opponentBoard.getSize())) {
+					throw new WrongEntryException("Coordonnées en dehors du plateau.");
+				}
+				hit = this.opponentBoard.sendHit(new Coords(hitInput.x, hitInput.y));
+				if (hit != null)
+					done = true;
 
-			coords.setX(hitInput.x);
-			coords.setY(hitInput.y);
-		} while (!done);
+				coords.setX(hitInput.x);
+				coords.setY(hitInput.y);
+			} while (!done);
 
-		return hit;
+			return hit;
+		}
+		catch (WrongEntryException e) {
+			System.err.println(e.getMessage());
+			return sendHit(coords);
+		}
 	}
 
 	public AbstractShip[] getShips() {

@@ -70,9 +70,10 @@ public class BattleShipsAI implements Serializable {
 			do {
 				coords.setX(random.nextInt(board.getSize()));
 				coords.setY(random.nextInt(board.getSize()));
-				ship.setOrientation(Orientation.randomOrientation());
-			} while (!board.canPutShip(ship, coords));
-			board.putShip(ship, coords);
+				orientation = orientations[random.nextInt(4)];
+				ship.setOrientation(orientation);
+			} while (!this.board.canPutShip(ship, coords));
+			this.board.putShip(ship, coords);
 		}
 	}
 
@@ -117,8 +118,8 @@ public class BattleShipsAI implements Serializable {
 			res = pickRandomCoords();
 		}
 
-		Hit hit = opponent.sendHit(res);
-		board.setHit(hit != Hit.MISS, res);
+		Hit hit = this.opponent.sendHit(res);
+		this.board.setHit(hit != Hit.MISS, res);
 
 		if (hit != Hit.MISS) {
 			if (lastStrike != null) {

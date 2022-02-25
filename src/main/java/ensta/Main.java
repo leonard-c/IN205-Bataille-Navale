@@ -13,7 +13,7 @@ import java.util.Random;
 public class Main {
 
 	public static void main(String args[]) {
-        //new Game().init().run();
+        new Game().init().run();
 
         /* Test Board */
 //        Board b = new Board("Test");
@@ -36,26 +36,26 @@ public class Main {
 //        System.out.println(hit.toString());
 
         /* Test AI */
-        Board board = new Board("Test AI");
-        AbstractShip ships[] = new AbstractShip[5];
-        ships[0] = new Submarine();
-        ships[1] = new Submarine();
-        ships[2] = new Carrier();
-        ships[3] = new Destroyer();
-        ships[4] = new BattleShip();
-        BattleShipsAI ai = new BattleShipsAI(board, board);
-        ai.putShips(ships);
+//        Board board = new Board("Test AI");
+//        AbstractShip ships[] = new AbstractShip[5];
+//        ships[0] = new Submarine();
+//        ships[1] = new Submarine();
+//        ships[2] = new Carrier();
+//        ships[3] = new Destroyer();
+//        ships[4] = new BattleShip();
+//        BattleShipsAI ai = new BattleShipsAI(board, board);
+//        ai.putShips(ships);
 
-        int destroyedShipsCount = 0;
-        Random random = new Random();
-        while (destroyedShipsCount<5) {
-                Coords hitCoords = new Coords();
-                Hit hit = ai.sendHit(hitCoords);
-                System.out.println("Tir en "+hitCoords.toString()+" : "+hit.toString());
-                board.print();
-                if ((hit != Hit.MISS)&&(hit !=Hit.STRIKE))
-                        destroyedShipsCount++;
-        }
+//        int destroyedShipsCount = 0;
+//        Random random = new Random();
+//        while (destroyedShipsCount<5) {
+//                Coords hitCoords = new Coords();
+//                Hit hit = ai.sendHit(hitCoords);
+//                System.out.println("Tir en "+hitCoords.toString()+" : "+hit.toString());
+//                board.print();
+//                if ((hit != Hit.MISS)&&(hit !=Hit.STRIKE))
+//                        destroyedShipsCount++;
+//        }
     }
 
 }

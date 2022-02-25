@@ -14,18 +14,21 @@ public class Board implements IBoard {
 	private int size;
 	private ShipState[][] ships;
 	private Boolean[][] strikes;
+	private boolean[][] alreadyStruck;
 	
 	public Board(String name, int size) {
 		this.name = name;
 		this.size = size;
 		this.ships = new ShipState[size][size];
 		this.strikes = new Boolean[size][size];
+		this.alreadyStruck = new boolean[size][size];
 	}
 	public Board(String name){
 		this.name = name;
 		this.size = DEFAULT_SIZE;
 		this.ships = new ShipState[DEFAULT_SIZE][DEFAULT_SIZE];
 		this.strikes = new Boolean[DEFAULT_SIZE][DEFAULT_SIZE];
+		this.alreadyStruck = new boolean[DEFAULT_SIZE][DEFAULT_SIZE];
 	}
 
 	public void print() {
@@ -116,10 +119,14 @@ public class Board implements IBoard {
 
 	@Override
 	public Hit sendHit(Coords res) {
-		if (ships[res.getY()][res.getX()] == null) {
-			return Hit.MISS;
-		}
-		if (!ships[res.getY()][res.getX()].isStruck()) {
+		try {
+			if (alreadyStruck[res.getY()][res.getX()]) {
+				throw new WrongEntryException("Case déjà visée, tirez sur une nouvelle");
+			}
+			alreadyStruck[res.getY()][res.getX()] = true;
+			if (ships[res.getY()][res.getX()] == null) {
+				return Hit.MISS;
+			}
 			ships[res.getY()][res.getX()].addStrike();
 			if (ships[res.getY()][res.getX()].isSunk()) {
 				switch (ships[res.getY()][res.getX()].getShip().getLabel()) {
@@ -133,10 +140,12 @@ public class Board implements IBoard {
 						return Hit.BATTLESHIP;
 				}
 			}
-		} else {
+			return Hit.STRIKE;
+		}
+		catch (WrongEntryException e) {
+			System.err.println(e.getMessage());
 			return null;
 		}
-		return Hit.STRIKE;
 	}
 
 	@Override
