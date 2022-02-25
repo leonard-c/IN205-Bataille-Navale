@@ -51,7 +51,7 @@ public class Main {
         while (destroyedShipsCount<5) {
                 Coords hitCoords = new Coords();
                 Hit hit = ai.sendHit(hitCoords);
-                System.out.println("Tir en "+hitCoords.toString()+" "+hit.toString());
+                System.out.println("Tir en "+hitCoords.toString()+" : "+hit.toString());
                 board.print();
                 if ((hit != Hit.MISS)&&(hit !=Hit.STRIKE))
                         destroyedShipsCount++;
